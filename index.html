@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byte Orbit | Click per Second</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-main: #1a1a1a;
+            --text-muted: #6c757d;
+            --white: #ffffff;
+            --accent: #000000;
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            font-family: 'Inter',sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.3rem 3%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .ByteOrbit{
+            font-weight: 900;
+            font-family: 'Space Grotesk';
+        }
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon img{
+            width: 100%;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 24px;
+            border: 1px solid #e0e0e0;
+            border-radius: 100px;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .content-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 700px;
+            padding: 60px 40px;
+            border-radius: 32px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .content-card p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        footer {
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .social-link {
+            color: #adb5bd;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 600px) {
+            .content-card {
+                padding: 40px 24px;
+                border-radius: 24px;
+            }
+            .content-card h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="brand">
+                <div class="logo-icon">
+                    <img src="images/Byte Orbit-2.png" alt="">
+                </div>
+                <span class="ByteOrbit">ByteOrbit</span>
+            </a>
+            <a href="index.html" class="back-link">Back</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="content-card">
+            
+            
+            <style>
+                .cps-tool-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    align-items: center;
+                }
+
+                .game-header {
+                    margin-bottom: 10px;
+                }
+
+                .game-title {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    letter-spacing: -1px;
+                    margin-bottom: 0.5rem;
+                }
+
+                .game-desc {
+                    color: var(--text-muted);
+                }
+
+                .stats-bar {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                    max-width: 400px;
+                    background: #f8f9fa;
+                    padding: 15px 25px;
+                    border-radius: 16px;
+                    border: 1px solid #eee;
+                }
+
+                .stat-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+        }
+
+                .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+                .stat-value {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+                .tap-area {
+                    width: 100%;
+                    min-height: 280px;
+                    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+                    border: 2px solid #e0e0e0;
+                    border-radius: 24px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    user-select: none;
+                    touch-action: manipulation; 
+                    transition: transform 0.1s, border-color 0.2s, box-shadow 0.2s;
+                    position: relative;
+                    overflow: hidden;
+        }
+
+        .tap-area:active, .tap-area.active {
+            transform: scale(0.98);
+            border-color: #000;
+            background: #f4f4f4;
+        }
+
+        .tap-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .tap-area:hover .tap-icon {
+            color: var(--accent);
+        }
+
+        .tap-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .tap-subtext {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.05);
+            transform: scale(0);
+            animation: ripple-anim 0.4s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-anim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .result-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .result-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .result-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .final-cps {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin: 10px 0;
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        .restart-btn {
+            margin-top: 20px;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 100px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 500px) {
+            .game-title { font-size: 2rem; }
+            .final-cps { font-size: 3rem; }
+            .tap-area { min-height: 220px; }
+        }
+    </style>
+
+            <div class="cps-tool-container">
+                <div class="game-header">
+                    <h1 class="game-title">Click Speed Test</h1>
+                    <p class="game-desc">Tap as fast as you can. You have 5 seconds.</p>
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-label">Time</span>
+                        <span class="stat-value" id="timer-display">5.0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Score</span>
+                        <span class="stat-value" id="score-display">0</span>
+                    </div>
+                </div>
+
+                <div class="tap-area" id="tap-zone">
+                    <i class="fa-solid fa-hand-pointer tap-icon"></i>
+                    <div class="tap-text">Tap to Start</div>
+                    <div class="tap-subtext">Starts on first click</div>
+                </div>
+
+                <div class="result-overlay" id="result-zone">
+                    <span class="result-label">Your Speed</span>
+                    <div class="final-cps" id="cps-display">0.00</div>
+                    <div style="font-size: 0.9rem; color: #888;">Clicks Per Second</div>
+                    <button class="restart-btn" id="restart-btn">Try Again</button>
+                </div>
+            </div>
+
+            <script>
+                (function() {
+                    const tapZone = document.getElementById('tap-zone');
+                    const timerDisplay = document.getElementById('timer-display');
+                    const scoreDisplay = document.getElementById('score-display');
+                    const resultZone = document.getElementById('result-zone');
+                    const cpsDisplay = document.getElementById('cps-display');
+                    const restartBtn = document.getElementById('restart-btn');
+                    const tapText = tapZone.querySelector('.tap-text');
+                    const tapSubtext = tapZone.querySelector('.tap-subtext');
+                    const tapIcon = tapZone.querySelector('.tap-icon');
+
+                    const GAME_DURATION = 5.0; 
+                    let timeLeft = GAME_DURATION;
+                    let score = 0;
+                    let isGameActive = false;
+                    let timerInterval = null;
+                    let lastTime = 0;
+
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    function playClickSound() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+                        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.06);
+                    }
+
+                    function createRipple(x, y) {
+                        const circle = document.createElement('span');
+                        const diameter = Math.max(tapZone.clientWidth, tapZone.clientHeight);
+                        const radius = diameter / 2;
+                        
+                        const rect = tapZone.getBoundingClientRect();
+                        const relX = x - rect.left;
+                        const relY = y - rect.top;
+
+                        circle.style.width = circle.style.height = `${100}px`;
+                        circle.style.left = `${relX - 50}px`;
+                        circle.style.top = `${relY - 50}px`;
+                        circle.classList.add('ripple');
+
+                        const existing = tapZone.getElementsByClassName('ripple');
+                        if (existing.length > 5) {
+                            existing[0].remove();
+                        }
+
+                        tapZone.appendChild(circle);
+                        
+                        
+                        setTimeout(() => {
+                            circle.remove();
+                        }, 400);
+                    }
+
+                    function formatTime(val) {
+                        return val.toFixed(1);
+                    }
+
+                    function startTimer() {
+                        const startTime = Date.now();
+                        const endTime = startTime + (GAME_DURATION * 1000);
+
+                        timerInterval = setInterval(() => {
+                            const now = Date.now();
+                            const remaining = Math.max(0, (endTime - now) / 1000);
+                            
+                            timeLeft = remaining;
+                            timerDisplay.textContent = timeLeft.toFixed(1);
+
+                            if (remaining <= 0) {
+                                endGame();
+                            }
+                        }, 50); 
+                    }
+
+                    function endGame() {
+                        clearInterval(timerInterval);
+                        isGameActive = false;
+                        timeLeft = 0;
+                        timerDisplay.textContent = "0.0";
+                        
+                        const cps = score / GAME_DURATION;
+                        cpsDisplay.textContent = cps.toFixed(2);
+                        
+                        resultZone.classList.add('visible');
+                    }
+
+                    function resetGame() {
+                        score = 0;
+                        timeLeft = GAME_DURATION;
+                        isGameActive = false;
+                        
+                        timerDisplay.textContent = formatTime(timeLeft);
+                        scoreDisplay.textContent = score;
+                        
+                        resultZone.classList.remove('visible');
+                        
+                        tapText.textContent = "Tap to Start";
+                        tapSubtext.style.display = 'block';
+                        tapIcon.className = "fa-solid fa-hand-pointer tap-icon";
+                        tapZone.style.borderColor = "#e0e0e0";
+                    }
+
+                    function handleInput(e) {
+                        
+                        if (timeLeft <= 0 && !isGameActive) return;
+
+                        if (!isGameActive) {
+                            isGameActive = true;
+                            startTimer();
+                            tapText.textContent = "TAP!";
+                            tapSubtext.style.display = 'none';
+                            tapIcon.className = "fa-solid fa-bolt tap-icon";
+                            tapZone.style.borderColor = "#000";
+                        }
+
+                        score++;
+                        scoreDisplay.textContent = score;
+
+                        playClickSound();
+                        
+                        let clientX, clientY;
+                        if (e.pointerType === 'touch') {
+                            clientX = e.clientX;
+                            clientY = e.clientY;
+                        } else {
+                            clientX = e.clientX;
+                            clientY = e.clientY;
+                        }
+                        
+                        createRipple(clientX, clientY);
+
+                        tapZone.classList.add('active');
+                        setTimeout(() => tapZone.classList.remove('active'), 50);
+                    }
+
+                    tapZone.addEventListener('pointerdown', handleInput);
+                    restartBtn.addEventListener('click', resetGame);
+                    
+                    tapZone.addEventListener('contextmenu', e => e.preventDefault());
+
+                })();
+            </script>
+            
+
+        </section>
+    </main>
+
+    <footer>
+        <a href="https://www.instagram.com/byte__orbit" target="_blank" class="social-link" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://github.com/Byte0rbit" target="_blank" class="social-link" aria-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.style.padding = '0.8rem 5%';
+                header.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
+            } else {
+                header.style.padding = '1.2rem 5%';
+                header.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
+            }
+        });
+    </script>
+</body>
+</html>
