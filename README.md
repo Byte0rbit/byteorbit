@@ -26,3 +26,4 @@ Projects by Byte Orbit will be added here as they are developed.
 
 ## Connect
 - GitHub: https://github.com/your-username
+- Instagram: https://www.instagram.com/byte__orbit
