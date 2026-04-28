@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byte Orbit | Click per Second</title>
+    <title>Byte Orbit | Reaction Time Tester</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,14 +17,21 @@
             --white: #ffffff;
             --accent: #000000;
             --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --game-idle-bg: var(--white);
+            --game-idle-icon: var(--accent);
+            --game-wait-bg: #ff4d4d; 
+            --game-wait-text: var(--white);
+            --game-go-bg: #00d26a;   
+            --game-go-text: var(--white);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; 
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -37,7 +44,6 @@
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
-
         header {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
@@ -99,7 +105,6 @@
             border-color: var(--accent);
             transform: translateY(-1px);
         }
-
         main {
             flex: 1;
             display: flex;
@@ -112,34 +117,131 @@
             background: var(--white);
             width: 100%;
             max-width: 700px;
-            padding: 60px 40px;
+            min-height: 450px; 
             border-radius: 32px;
             box-shadow: var(--card-shadow);
             text-align: center;
             animation: fadeIn 0.8s ease-out;
-            position: relative;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            position: relative;
+            touch-action: manipulation; 
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            width: 100%;
+            height: 100%;
+        }
 
-        .content-card h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        .game-icon-wrapper {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0.8;
+        }
+
+        .game-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
             letter-spacing: -1px;
+            font-family: 'Space Grotesk', sans-serif;
         }
 
-        .content-card p {
-            color: var(--text-muted);
+        .game-subtitle {
             font-size: 1.1rem;
-            max-width: 500px;
+            color: var(--text-muted);
+            max-width: 400px;
             margin: 0 auto;
+            line-height: 1.4;
         }
 
+        .result-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .score-value {
+            font-size: 5rem;
+            font-weight: 800;
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .score-unit {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: inherit;
+            opacity: 0.7;
+        }
+
+        .helper-text {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .game-area.state-idle {
+            background-color: var(--game-idle-bg);
+            color: var(--text-main);
+        }
+        .game-area.state-idle .game-subtitle { color: var(--text-muted); }
+
+        .game-area.state-waiting {
+            background-color: var(--game-wait-bg);
+            color: var(--game-wait-text);
+            cursor: wait;
+        }
+        .game-area.state-waiting .game-subtitle { color: rgba(255,255,255, 0.8); }
+
+        .game-area.state-ready {
+            background-color: var(--game-go-bg);
+            color: var(--game-go-text);
+            cursor: pointer;
+            transform: scale(1.01);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
+        }
+        .game-area.state-ready .game-icon-wrapper {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .game-area.state-fail {
+            background-color: var(--game-wait-bg); 
+            color: var(--white);
+        }
+
+        .game-area.state-result {
+            background-color: var(--game-idle-bg);
+            color: var(--text-main);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
         footer {
             padding: 40px 0;
             display: flex;
@@ -161,12 +263,12 @@
 
         @media (max-width: 600px) {
             .content-card {
-                padding: 40px 24px;
                 border-radius: 24px;
+                min-height: 400px;
             }
-            .content-card h1 {
-                font-size: 1.8rem;
-            }
+            .game-title { font-size: 1.5rem; }
+            .score-value { font-size: 4rem; }
+            .game-area { padding: 20px; }
         }
     </style>
 </head>
@@ -186,373 +288,27 @@
 
     <main>
         <section class="content-card">
-            
-            
-            <style>
-                .cps-tool-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-                    align-items: center;
-                }
 
-                .game-header {
-                    margin-bottom: 10px;
-                }
-
-                .game-title {
-                    font-size: 2.5rem;
-                    font-weight: 700;
-                    letter-spacing: -1px;
-                    margin-bottom: 0.5rem;
-                }
-
-                .game-desc {
-                    color: var(--text-muted);
-                }
-
-                .stats-bar {
-                    display: flex;
-                    justify-content: space-between;
-                    width: 100%;
-                    max-width: 400px;
-                    background: #f8f9fa;
-                    padding: 15px 25px;
-                    border-radius: 16px;
-                    border: 1px solid #eee;
-                }
-
-                .stat-item {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-        }
-
-                .stat-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-                .stat-value {
-            font-family: 'Space Grotesk', monospace;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-                .tap-area {
-                    width: 100%;
-                    min-height: 280px;
-                    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-                    border: 2px solid #e0e0e0;
-                    border-radius: 24px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    user-select: none;
-                    touch-action: manipulation; 
-                    transition: transform 0.1s, border-color 0.2s, box-shadow 0.2s;
-                    position: relative;
-                    overflow: hidden;
-        }
-
-        .tap-area:active, .tap-area.active {
-            transform: scale(0.98);
-            border-color: #000;
-            background: #f4f4f4;
-        }
-
-        .tap-icon {
-            font-size: 3rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            transition: color 0.2s;
-        }
-
-        .tap-area:hover .tap-icon {
-            color: var(--accent);
-        }
-
-        .tap-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-
-        .tap-subtext {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.05);
-            transform: scale(0);
-            animation: ripple-anim 0.4s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-anim {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        .result-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-
-        .result-overlay.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .result-label {
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .final-cps {
-            font-size: 4rem;
-            font-weight: 800;
-            color: var(--accent);
-            line-height: 1;
-            margin: 10px 0;
-            font-family: 'Space Grotesk', monospace;
-        }
-
-        .restart-btn {
-            margin-top: 20px;
-            background: var(--accent);
-            color: var(--white);
-            border: none;
-            padding: 12px 32px;
-            border-radius: 100px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .restart-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-
-        @media (max-width: 500px) {
-            .game-title { font-size: 2rem; }
-            .final-cps { font-size: 3rem; }
-            .tap-area { min-height: 220px; }
-        }
-    </style>
-
-            <div class="cps-tool-container">
-                <div class="game-header">
-                    <h1 class="game-title">Click Speed Test</h1>
-                    <p class="game-desc">Tap as fast as you can. You have 5 seconds.</p>
+            <div id="gameArea" class="game-area state-idle">
+                
+                <div class="game-icon-wrapper">
+                    <i id="gameIcon" class="fa-solid fa-bolt"></i>
                 </div>
 
-                <div class="stats-bar">
-                    <div class="stat-item">
-                        <span class="stat-label">Time</span>
-                        <span class="stat-value" id="timer-display">5.0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Score</span>
-                        <span class="stat-value" id="score-display">0</span>
-                    </div>
+                <h2 id="gameTitle" class="game-title">Reaction Time</h2>
+                
+                <p id="gameMessage" class="game-subtitle">
+                    Tap anywhere to start the test.
+                </p>
+
+                <div id="resultDisplay" class="result-display">
+                    <span id="scoreValue" class="score-value">245</span>
+                    <span class="score-unit">ms</span>
                 </div>
 
-                <div class="tap-area" id="tap-zone">
-                    <i class="fa-solid fa-hand-pointer tap-icon"></i>
-                    <div class="tap-text">Tap to Start</div>
-                    <div class="tap-subtext">Starts on first click</div>
-                </div>
-
-                <div class="result-overlay" id="result-zone">
-                    <span class="result-label">Your Speed</span>
-                    <div class="final-cps" id="cps-display">0.00</div>
-                    <div style="font-size: 0.9rem; color: #888;">Clicks Per Second</div>
-                    <button class="restart-btn" id="restart-btn">Try Again</button>
-                </div>
+                <div id="helperText" class="helper-text">Tap to try again</div>
             </div>
-
-            <script>
-                (function() {
-                    const tapZone = document.getElementById('tap-zone');
-                    const timerDisplay = document.getElementById('timer-display');
-                    const scoreDisplay = document.getElementById('score-display');
-                    const resultZone = document.getElementById('result-zone');
-                    const cpsDisplay = document.getElementById('cps-display');
-                    const restartBtn = document.getElementById('restart-btn');
-                    const tapText = tapZone.querySelector('.tap-text');
-                    const tapSubtext = tapZone.querySelector('.tap-subtext');
-                    const tapIcon = tapZone.querySelector('.tap-icon');
-
-                    const GAME_DURATION = 5.0; 
-                    let timeLeft = GAME_DURATION;
-                    let score = 0;
-                    let isGameActive = false;
-                    let timerInterval = null;
-                    let lastTime = 0;
-
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    
-                    function playClickSound() {
-                        if (audioCtx.state === 'suspended') audioCtx.resume();
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
-                        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.start();
-                        osc.stop(audioCtx.currentTime + 0.06);
-                    }
-
-                    function createRipple(x, y) {
-                        const circle = document.createElement('span');
-                        const diameter = Math.max(tapZone.clientWidth, tapZone.clientHeight);
-                        const radius = diameter / 2;
-                        
-                        const rect = tapZone.getBoundingClientRect();
-                        const relX = x - rect.left;
-                        const relY = y - rect.top;
-
-                        circle.style.width = circle.style.height = `${100}px`;
-                        circle.style.left = `${relX - 50}px`;
-                        circle.style.top = `${relY - 50}px`;
-                        circle.classList.add('ripple');
-
-                        const existing = tapZone.getElementsByClassName('ripple');
-                        if (existing.length > 5) {
-                            existing[0].remove();
-                        }
-
-                        tapZone.appendChild(circle);
-                        
-                        
-                        setTimeout(() => {
-                            circle.remove();
-                        }, 400);
-                    }
-
-                    function formatTime(val) {
-                        return val.toFixed(1);
-                    }
-
-                    function startTimer() {
-                        const startTime = Date.now();
-                        const endTime = startTime + (GAME_DURATION * 1000);
-
-                        timerInterval = setInterval(() => {
-                            const now = Date.now();
-                            const remaining = Math.max(0, (endTime - now) / 1000);
-                            
-                            timeLeft = remaining;
-                            timerDisplay.textContent = timeLeft.toFixed(1);
-
-                            if (remaining <= 0) {
-                                endGame();
-                            }
-                        }, 50); 
-                    }
-
-                    function endGame() {
-                        clearInterval(timerInterval);
-                        isGameActive = false;
-                        timeLeft = 0;
-                        timerDisplay.textContent = "0.0";
-                        
-                        const cps = score / GAME_DURATION;
-                        cpsDisplay.textContent = cps.toFixed(2);
-                        
-                        resultZone.classList.add('visible');
-                    }
-
-                    function resetGame() {
-                        score = 0;
-                        timeLeft = GAME_DURATION;
-                        isGameActive = false;
-                        
-                        timerDisplay.textContent = formatTime(timeLeft);
-                        scoreDisplay.textContent = score;
-                        
-                        resultZone.classList.remove('visible');
-                        
-                        tapText.textContent = "Tap to Start";
-                        tapSubtext.style.display = 'block';
-                        tapIcon.className = "fa-solid fa-hand-pointer tap-icon";
-                        tapZone.style.borderColor = "#e0e0e0";
-                    }
-
-                    function handleInput(e) {
-                        
-                        if (timeLeft <= 0 && !isGameActive) return;
-
-                        if (!isGameActive) {
-                            isGameActive = true;
-                            startTimer();
-                            tapText.textContent = "TAP!";
-                            tapSubtext.style.display = 'none';
-                            tapIcon.className = "fa-solid fa-bolt tap-icon";
-                            tapZone.style.borderColor = "#000";
-                        }
-
-                        score++;
-                        scoreDisplay.textContent = score;
-
-                        playClickSound();
-                        
-                        let clientX, clientY;
-                        if (e.pointerType === 'touch') {
-                            clientX = e.clientX;
-                            clientY = e.clientY;
-                        } else {
-                            clientX = e.clientX;
-                            clientY = e.clientY;
-                        }
-                        
-                        createRipple(clientX, clientY);
-
-                        tapZone.classList.add('active');
-                        setTimeout(() => tapZone.classList.remove('active'), 50);
-                    }
-
-                    tapZone.addEventListener('pointerdown', handleInput);
-                    restartBtn.addEventListener('click', resetGame);
-                    
-                    tapZone.addEventListener('contextmenu', e => e.preventDefault());
-
-                })();
-            </script>
-            
-
+        
         </section>
     </main>
 
@@ -576,6 +332,95 @@
                 header.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
             }
         });
+
+        const gameArea = document.getElementById('gameArea');
+        const gameIcon = document.getElementById('gameIcon');
+        const gameTitle = document.getElementById('gameTitle');
+        const gameMessage = document.getElementById('gameMessage');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const scoreValue = document.getElementById('scoreValue');
+        const helperText = document.getElementById('helperText');
+        let gameState = 'idle'; 
+        let signalTime = 0;
+        let timerId = null;
+        const MIN_DELAY = 2000; 
+        const MAX_DELAY = 5000; 
+
+        const ICONS = {
+            idle: 'fa-bolt',
+            waiting: 'fa-hourglass-half',
+            ready: 'fa-hand-pointer',
+            fail: 'fa-circle-exclamation',
+            result: 'fa-stopwatch'
+        };
+
+        gameArea.addEventListener('pointerdown', handleInput);
+        function handleInput(e) {
+
+            e.preventDefault();
+
+            switch (gameState) {
+                case 'idle':
+                case 'result':
+                case 'fail':
+                    startWaiting();
+                    break;
+                case 'waiting':
+                    triggerFail();
+                    break;
+                case 'ready':
+                    triggerSuccess();
+                    break;
+            }
+        }
+
+        function startWaiting() {
+            gameState = 'waiting';
+
+            updateUI('waiting', 'Wait for green...', 'Wait...', ICONS.waiting);
+            resultDisplay.style.display = 'none';
+            helperText.style.opacity = '0';
+            const delay = Math.floor(Math.random() * (MAX_DELAY - MIN_DELAY + 1)) + MIN_DELAY;
+            
+
+            timerId = setTimeout(() => {
+                setSignal();
+            }, delay);
+        }
+
+        function setSignal() {
+            if (gameState !== 'waiting') return; 
+
+            gameState = 'ready';
+            signalTime = performance.now(); 
+            updateUI('ready', 'TAP NOW!', 'GO!', ICONS.ready);
+        }
+
+        function triggerSuccess() {
+            const endTime = performance.now();
+            const reactionTime = Math.round(endTime - signalTime);
+            
+            gameState = 'result';
+            updateUI('result', 'Tap to try again', 'Reaction Time', ICONS.result);      
+            scoreValue.textContent = reactionTime;
+            resultDisplay.style.display = 'flex';
+            helperText.style.opacity = '1';
+        }
+
+        function triggerFail() {
+            clearTimeout(timerId);
+            gameState = 'fail';
+            updateUI('fail', 'Too soon! Tap to retry.', 'Whoops!', ICONS.fail);
+            resultDisplay.style.display = 'none';
+            helperText.style.opacity = '1';
+        }
+
+        function updateUI(state, msg, title, iconClass) {
+            gameArea.className = `game-area state-${state}`;
+            gameMessage.textContent = msg;
+            gameTitle.textContent = title;
+            gameIcon.className = `fa-solid ${iconClass}`;
+        }
     </script>
 </body>
 </html>
